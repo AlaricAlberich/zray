@@ -98,4 +98,5 @@ const examples = [_]Example{
     .{ .path = "basic_window.zig", .display_name = "Core: Basic Window" },
     .{ .path = "input_keys.zig", .display_name = "Core: Input Keys" },
     .{ .path = "input_mouse.zig", .display_name = "Core: Input Mouse" },
+    .{ .path = "2d_camera.zig", .display_name = "Core: 2D Camera" },
 };
