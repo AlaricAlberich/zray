@@ -18,23 +18,18 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_unit_tests.step);
 
     // Examples
-    {
-        const example = b.addExecutable(.{ .name = "basic_window", .root_source_file = .{ .path = "examples/basic_window.zig" }, .target = target, .optimize = optimize });
-        example.linkLibC();
-        example.linkLibrary(raylib);
-        example.addModule("zray", zigrl);
-        const run_example = b.addRunArtifact(example);
-        const run_step = b.step("basic_window", "Core Window Example");
-        run_step.dependOn(&run_example.step);
-    }
-
-    {
-        const example = b.addExecutable(.{ .name = "input_keys", .root_source_file = .{ .path = "examples/input_keys.zig" }, .target = target, .optimize = optimize });
-        example.linkLibC();
-        example.linkLibrary(raylib);
-        example.addModule("zray", zigrl);
-        const run_example = b.addRunArtifact(example);
-        const run_step = b.step("input_keys", "Input Keys Example");
+    const dir = std.fs.path.dirname(@src().file) orelse ".";
+    _ = dir;
+    for (examples) |example| {
+        const path = std.fs.path.join(b.allocator, &.{ "examples", example.path }) catch unreachable;
+        var text: [64:0]u8 = undefined;
+        const step_name = std.fmt.bufPrintZ(&text, "example_{s}", .{example.path}) catch unreachable;
+        const exe = b.addExecutable(.{ .name = step_name, .root_source_file = .{ .path = path }, .target = target, .optimize = optimize });
+        exe.linkLibC();
+        exe.linkLibrary(raylib);
+        exe.addModule("zray", zigrl);
+        const run_example = b.addRunArtifact(exe);
+        const run_step = b.step(step_name, example.display_name);
         run_step.dependOn(&run_example.step);
     }
 }
@@ -92,4 +87,15 @@ const raylib_source_files = [_][]const u8{
     "rtext.c",
     "rtextures.c",
     "utils.c",
+};
+
+const Example = struct {
+    path: []const u8,
+    display_name: []const u8,
+};
+
+const examples = [_]Example{
+    .{ .path = "basic_window.zig", .display_name = "Core: Basic Window" },
+    .{ .path = "input_keys.zig", .display_name = "Core: Input Keys" },
+    .{ .path = "input_mouse.zig", .display_name = "Core: Input Mouse" },
 };
