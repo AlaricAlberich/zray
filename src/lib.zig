@@ -6,7 +6,7 @@ const c = @cImport({
 const input = @import("input.zig");
 pub const Key = input.Key;
 pub const isKeyDown = input.isKeyDown;
-pub const isKeyPressed = input.isKeyDown;
+pub const isKeyPressed = input.isKeyPressed;
 
 pub const MouseButton = input.MouseButton;
 pub const getMousePosition = input.getMousePosition;
@@ -59,6 +59,26 @@ pub const Rectangle = packed struct {
 pub const Vector2 = packed struct {
     x: f32,
     y: f32,
+
+    pub fn add(self: Vector2, other: Vector2) Vector2 {
+        return .{ .x = self.x + other.x, .y = self.y + other.y };
+    }
+
+    pub fn subtract(self: Vector2, other: Vector2) Vector2 {
+        return .{ .x = self.x - other.x, .y = self.y - other.y };
+    }
+
+    pub fn scale(self: Vector2, scalar: f32) Vector2 {
+        return .{ .x = self.x * scalar, .y = self.y * scalar };
+    }
+
+    pub fn length(self: Vector2) f32 {
+        return std.math.sqrt(self.lengthSqr());
+    }
+
+    pub fn lengthSqr(self: Vector2) f32 {
+        return self.x * self.x + self.y * self.y;
+    }
 };
 
 pub fn initWindow(screen_width: i32, screen_height: i32, title: []const u8) void {
@@ -146,4 +166,20 @@ pub fn fade(color: Color, alpha: f32) Color {
     const converted_input = @bitCast(c.struct_Color, color);
     const c_result = c.Fade(converted_input, alpha);
     return @bitCast(Color, c_result);
+}
+
+pub fn getFrameTime() f32 {
+    return c.GetFrameTime();
+}
+
+pub fn getWorldToScreen2D(position: Vector2, camera: Camera2D) Vector2 {
+    const converted_position = @bitCast(c.struct_Vector2, position);
+    const converted_camera = @bitCast(c.struct_Camera2D, camera);
+    return @bitCast(Vector2, c.GetWorldToScreen2D(converted_position, converted_camera));
+}
+
+pub fn getScreenToWorld2D(position: Vector2, camera: Camera2D) Vector2 {
+    const converted_position = @bitCast(c.struct_Vector2, position);
+    const converted_camera = @bitCast(c.struct_Camera2D, camera);
+    return @bitCast(Vector2, c.GetScreenToWorld2D(converted_position, converted_camera));
 }
