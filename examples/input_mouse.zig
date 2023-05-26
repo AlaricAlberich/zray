@@ -40,5 +40,6 @@ pub fn main() !void {
 
         raylib.clearBackground(ray_white);
         raylib.drawCircleV(ball_position, 40, ball_color);
+        raylib.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, raylib.Color.dark_gray);
     }
 }
