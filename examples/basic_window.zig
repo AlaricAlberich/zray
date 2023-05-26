@@ -1,4 +1,4 @@
-const raylib = @import("zigrl");
+const raylib = @import("zray");
 
 pub fn main() !void {
     const screen_width = 800;

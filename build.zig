@@ -22,7 +22,7 @@ pub fn build(b: *std.Build) void {
         const example = b.addExecutable(.{ .name = "basic_window", .root_source_file = .{ .path = "examples/basic_window.zig" }, .target = target, .optimize = optimize });
         example.linkLibC();
         example.linkLibrary(raylib);
-        example.addModule("zigrl", zigrl);
+        example.addModule("zray", zigrl);
         const run_example = b.addRunArtifact(example);
         const run_step = b.step("basic_window", "Core Window Example");
         run_step.dependOn(&run_example.step);
@@ -32,7 +32,7 @@ pub fn build(b: *std.Build) void {
         const example = b.addExecutable(.{ .name = "input_keys", .root_source_file = .{ .path = "examples/input_keys.zig" }, .target = target, .optimize = optimize });
         example.linkLibC();
         example.linkLibrary(raylib);
-        example.addModule("zigrl", zigrl);
+        example.addModule("zray", zigrl);
         const run_example = b.addRunArtifact(example);
         const run_step = b.step("input_keys", "Input Keys Example");
         run_step.dependOn(&run_example.step);

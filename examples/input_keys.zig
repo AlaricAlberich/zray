@@ -1,4 +1,4 @@
-const raylib = @import("zigrl");
+const raylib = @import("zray");
 const Vector2 = raylib.Vector2;
 const Key = raylib.Key;
 
