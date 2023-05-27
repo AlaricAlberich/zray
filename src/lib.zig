@@ -2,7 +2,6 @@ const std = @import("std");
 const c = @cImport({
     @cInclude("raylib.h");
 });
-
 const core = @import("core.zig");
 pub const initWindow = core.initWindow;
 pub const windowShouldClose = core.windowShouldClose;
@@ -34,6 +33,7 @@ pub const getMousePosition = core.getMousePosition;
 pub const getMouseWheelMove = core.getMouseWheelMove;
 
 const textures = @import("textures.zig");
+pub const NPatchInfo = textures.NPatchInfo;
 pub const NPatchLayout = textures.NPatchLayout;
 pub const PixelFormat = textures.PixelFormat;
 pub const Texture = textures.Texture;
