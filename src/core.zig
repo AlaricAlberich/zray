@@ -7,6 +7,7 @@ const Camera2D = main.Camera2D;
 const Vector2 = main.Vector2;
 const Key = main.Key;
 const MouseButton = main.MouseButton;
+const RenderTexture2D = main.RenderTexture2D;
 // // Window-related functions
 /// Initialize window and OpenGL context
 pub fn initWindow(screen_width: i32, screen_height: i32, title: []const u8) void {
@@ -44,7 +45,10 @@ pub fn closeWindow() void {
 //    void SetWindowSize(int width, int height);                  // Set window dimensions
 //    void SetWindowOpacity(float opacity);                       // Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
 //    void *GetWindowHandle(void);                                // Get native window handle
-//    int GetScreenWidth(void);                                   // Get current screen width
+/// Get current screen width
+pub fn getScreenWidth() i32 {
+    return c.GetScreenWidth();
+}
 //    int GetScreenHeight(void);                                  // Get current screen height
 //    int GetRenderWidth(void);                                   // Get current render width (it considers HiDPI)
 //    int GetRenderHeight(void);                                  // Get current render height (it considers HiDPI)
@@ -104,8 +108,14 @@ pub fn endMode2D() void {
 }
 //    void BeginMode3D(Camera3D camera);                          // Begin 3D mode with custom camera (3D)
 //    void EndMode3D(void);                                       // Ends 3D mode and returns to default 2D orthographic mode
-//    void BeginTextureMode(RenderTexture2D target);              // Begin drawing to render texture
-//    void EndTextureMode(void);                                  // Ends drawing to render texture
+/// Begin drawing to render texture
+pub fn beginTextureMode(target: RenderTexture2D) void {
+    c.BeginTextureMode(target.cCast());
+}
+/// Ends drawing to render texture
+pub fn endTextureMode() void {
+    c.EndTextureMode();
+}
 //    void BeginShaderMode(Shader shader);                        // Begin custom shader drawing
 //    void EndShaderMode(void);                                   // End custom shader drawing (use default shader)
 //    void BeginBlendMode(int mode);                              // Begin blending mode (alpha, additive, multiplied, subtract, custom)
@@ -161,7 +171,10 @@ pub fn setTargetFPS(fps: i32) void {
 pub fn getFrameTime() f32 {
     return c.GetFrameTime();
 }
-//    double GetTime(void);                                       // Get elapsed time in seconds since InitWindow()
+/// Get elapsed time in seconds since InitWindow()
+pub fn getTime() f64 {
+    return c.GetTime();
+}
 
 //    // Misc. functions
 /// Get a random value between min and max (both included)

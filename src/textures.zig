@@ -87,6 +87,12 @@ const Vector2 = main.Vector2;
 //
 // Texture loading functions
 // NOTE: These functions require GPU access
+
+const TextureError = error{
+    TextureLoadError,
+    CantCreateFramebuffer,
+};
+
 pub const Texture = packed struct {
     id: u32,
     width: i32,
@@ -105,6 +111,11 @@ pub const Texture = packed struct {
         _ = try std.fmt.bufPrintZ(full_path[dir.len..], "/{s}", .{file_name});
         const c_file_name = @ptrCast([*c]const u8, &full_path);
         const c_texture = c.LoadTexture(c_file_name);
+
+        if (c_texture.id == 0) {
+            return TextureError.TextureLoadError;
+        }
+
         return @bitCast(Self, c_texture);
     }
 
@@ -120,6 +131,16 @@ pub const Texture = packed struct {
         c.DrawTexture(c_texture, x, y, c_color);
     }
 
+    pub fn drawPro(self: Self, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+        const c_tex = self.cCast();
+        const c_src = source.cCast();
+        const c_dest = dest.cCast();
+        const c_origin = origin.cCast();
+        const c_tint = tint.cCast();
+
+        c.DrawTexturePro(c_tex, c_src, c_dest, c_origin, rotation, c_tint);
+    }
+
     //    void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
     pub fn drawNPatch(self: Self, npatch_info: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
         const c_tint = @bitCast(c.struct_Color, tint);
@@ -128,6 +149,35 @@ pub const Texture = packed struct {
         const c_dest = @bitCast(c.struct_Rectangle, dest);
         const c_origin = @bitCast(c.struct_Vector2, origin);
         c.DrawTextureNPatch(c_texture, c_npatch_info, c_dest, c_origin, rotation, c_tint);
+    }
+
+    pub inline fn cCast(self: Self) c.struct_Texture {
+        return @bitCast(c.struct_Texture, self);
+    }
+};
+
+pub const RenderTexture = packed struct {
+    id: u32,
+    texture: Texture,
+    depth: Texture,
+
+    const Self = @This();
+    pub fn init(width: i32, height: i32) !Self {
+        const result = c.LoadRenderTexture(width, height);
+        if (result.id != 0) {
+            return @bitCast(Self, result);
+        } else {
+            return TextureError.CantCreateFramebuffer;
+        }
+    }
+
+    pub inline fn cCast(self: Self) c.struct_RenderTexture {
+        return @bitCast(c.struct_RenderTexture, self);
+    }
+
+    pub fn deinit(self: Self) void {
+        const c_tex = self.cCast();
+        c.UnloadRenderTexture(c_tex);
     }
 };
 //    Texture2D LoadTextureFromImage(Image image);                                                       // Load texture from image data

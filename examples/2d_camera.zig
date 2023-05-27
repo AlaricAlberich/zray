@@ -117,10 +117,10 @@ pub fn main() !void {
             raylib.drawRectangle(-6000, 320, 13000, 8000, raylib.Color.dark_gray);
 
             for (0..max_buildings) |i| {
-                raylib.drawRectangleRec(buildings[i], buildColors[i]);
+                buildings[i].draw(buildColors[i]);
             }
 
-            raylib.drawRectangleRec(player, raylib.Color.red);
+            player.draw(raylib.Color.red);
 
             raylib.drawLine(@floatToInt(i32, camera.target.x), -screen_height * 10, @floatToInt(i32, camera.target.x), screen_height * 10, raylib.Color.green);
             raylib.drawLine(-screen_width * 10, @floatToInt(i32, camera.target.y), screen_width * 10, @floatToInt(i32, camera.target.y), raylib.Color.green);

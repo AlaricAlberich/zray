@@ -7,18 +7,22 @@ const core = @import("core.zig");
 pub const initWindow = core.initWindow;
 pub const windowShouldClose = core.windowShouldClose;
 pub const closeWindow = core.closeWindow;
+pub const getScreenWidth = core.getScreenWidth;
 
 pub const clearBackground = core.clearBackground;
 pub const beginDrawing = core.beginDrawing;
 pub const endDrawing = core.endDrawing;
 pub const beginMode2D = core.beginMode2D;
 pub const endMode2D = core.endMode2D;
+pub const beginTextureMode = core.beginTextureMode;
+pub const endTextureMode = core.endTextureMode;
 
 pub const getScreenToWorld2D = core.getScreenToWorld2D;
 pub const getWorldToScreen2D = core.getWorldToScreen2D;
 
 pub const setTargetFPS = core.setTargetFPS;
 pub const getFrameTime = core.getFrameTime;
+pub const getTime = core.getTime;
 
 pub const getRandomValue = core.getRandomValue;
 
@@ -34,6 +38,8 @@ pub const NPatchLayout = textures.NPatchLayout;
 pub const PixelFormat = textures.PixelFormat;
 pub const Texture = textures.Texture;
 pub const Texture2D = Texture;
+pub const RenderTexture = textures.RenderTexture;
+pub const RenderTexture2D = RenderTexture;
 
 //-----------------
 // Structs
@@ -50,7 +56,7 @@ pub const Color = packed struct {
     pub const maroon = .{ .r = 190, .g = 33, .b = 55, .a = 255 };
     pub const green = .{ .r = 0, .g = 228, .b = 48, .a = 255 };
     pub const lime = .{ .r = 0, .g = 158, .b = 47, .a = 255 };
-    pub const darkgreen = .{ .r = 0, .g = 117, .b = 44, .a = 255 };
+    pub const dark_green = .{ .r = 0, .g = 117, .b = 44, .a = 255 };
     pub const sky_blue = .{ .r = 102, .g = 191, .b = 255, .a = 255 };
     pub const blue = .{ .r = 0, .g = 121, .b = 241, .a = 255 };
     pub const dark_blue = .{ .r = 0, .g = 82, .b = 172, .a = 255 };
@@ -73,6 +79,12 @@ pub const Color = packed struct {
     g: u8,
     b: u8,
     a: u8,
+
+    const Self = @This();
+
+    pub inline fn cCast(self: Self) c.struct_Color {
+        return @bitCast(c.struct_Color, self);
+    }
 };
 
 pub const Rectangle = packed struct {
@@ -80,35 +92,62 @@ pub const Rectangle = packed struct {
     y: f32,
     width: f32,
     height: f32,
+
+    const Self = @This();
+    pub fn draw(self: Self, color: Color) void {
+        const converted_color = @bitCast(c.struct_Color, color);
+        const converted_rec = @bitCast(c.struct_Rectangle, self);
+        c.DrawRectangleRec(converted_rec, converted_color);
+    }
+
+    pub fn drawPro(self: Self, origin: Vector2, rotation: f32, color: Color) void {
+        const c_rect = self.cCast();
+        const c_origin = origin.cCast();
+        const c_color = color.cCast();
+        c.DrawRectanglePro(c_rect, c_origin, rotation, c_color);
+    }
+
+    pub inline fn cCast(self: Self) c.struct_Rectangle {
+        return @bitCast(c.struct_Rectangle, self);
+    }
 };
 
 pub const Vector2 = packed struct {
     x: f32,
     y: f32,
 
-    pub fn add(self: Vector2, other: Vector2) Vector2 {
+    const Self = @This();
+    pub fn add(self: Self, other: Self) Self {
         return .{ .x = self.x + other.x, .y = self.y + other.y };
     }
 
-    pub fn subtract(self: Vector2, other: Vector2) Vector2 {
+    pub fn subtract(self: Self, other: Self) Self {
         return .{ .x = self.x - other.x, .y = self.y - other.y };
     }
 
-    pub fn scale(self: Vector2, scalar: f32) Vector2 {
+    pub fn scale(self: Self, scalar: f32) Self {
         return .{ .x = self.x * scalar, .y = self.y * scalar };
     }
 
-    pub fn length(self: Vector2) f32 {
+    pub fn length(self: Self) f32 {
         return std.math.sqrt(self.lengthSqr());
     }
 
-    pub fn lengthSqr(self: Vector2) f32 {
+    pub fn lengthSqr(self: Self) f32 {
         return self.x * self.x + self.y * self.y;
+    }
+
+    pub inline fn cCast(self: Self) c.struct_Vector2 {
+        return @bitCast(c.struct_Vector2, self);
     }
 };
 
 pub fn drawText(text: []const u8, x: i32, y: i32, font_size: i32, color: Color) void {
     c.DrawText(@ptrCast([*c]const u8, text), x, y, font_size, @bitCast(c.struct_Color, color));
+}
+
+pub fn drawFPS(pos_x: i32, pos_y: i32) void {
+    c.DrawFPS(pos_x, pos_y);
 }
 
 pub fn drawCircleV(position: Vector2, radius: f32, color: Color) void {
@@ -130,12 +169,6 @@ pub fn drawRectangle(x: i32, y: i32, width: i32, height: i32, color: Color) void
 pub fn drawRectangleLines(x: i32, y: i32, width: i32, height: i32, color: Color) void {
     const converted_color = @bitCast(c.struct_Color, color);
     c.DrawRectangleLines(x, y, width, height, converted_color);
-}
-
-pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
-    const converted_color = @bitCast(c.struct_Color, color);
-    const converted_rec = @bitCast(c.struct_Rectangle, rec);
-    c.DrawRectangleRec(converted_rec, converted_color);
 }
 
 pub fn drawLine(start_pos_x: i32, start_pos_y: i32, end_pos_x: i32, end_pos_y: i32, color: Color) void {

@@ -121,11 +121,11 @@ pub fn main() void {
                 defer raylib.endMode2D();
 
                 for (env_items) |env_item| {
-                    raylib.drawRectangleRec(env_item.rect, env_item.color);
+                    env_item.rect.draw(env_item.color);
                 }
 
-                const player_rect = .{ .x = player.position.x - 20, .y = player.position.y - 40, .width = 40, .height = 40 };
-                raylib.drawRectangleRec(player_rect, Color.red);
+                const player_rect: Rectangle = .{ .x = player.position.x - 20, .y = player.position.y - 40, .width = 40, .height = 40 };
+                player_rect.draw(Color.red);
             }
 
             raylib.drawText("Controls:", 20, 20, 10, Color.black);

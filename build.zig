@@ -34,9 +34,12 @@ pub fn build(b: *std.Build) void {
         const run_step = b.step(step_name, example.display_name);
         run_step.dependOn(&run_example.step);
     }
+
+    const all_examples_step = b.step("examples", "Build All Examples");
+    all_examples_step.dependOn(b.getInstallStep());
 }
 
-fn buildRaylib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *CompileStep {
+pub fn buildRaylib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *CompileStep {
     const raylib = b.addStaticLibrary(.{ .name = "raylib", .target = target, .optimize = optimize });
     raylib.linkLibC();
     raylib.addIncludePath("raylib/src");
@@ -102,6 +105,7 @@ const examples = [_]Example{
     .{ .path = "input_mouse.zig", .display_name = "Core: Input Mouse" },
     .{ .path = "2d_camera.zig", .display_name = "Core: 2D Camera" },
     .{ .path = "2d_camera_platformer.zig", .display_name = "Core: 2D Camera Platformer" },
+    .{ .path = "smooth_pixelperfect.zig", .display_name = "Core: Smooth Pixelperfect" },
     .{ .path = "logo_raylib.zig", .display_name = "Textures: Logo Raylib" },
     .{ .path = "npatch_drawing.zig", .display_name = "Textures: NPatch Drawing" },
 };
