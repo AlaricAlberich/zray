@@ -18,8 +18,7 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_unit_tests.step);
 
     // Examples
-    const dir = std.fs.path.dirname(@src().file) orelse ".";
-    _ = dir;
+    b.installDirectory(.{ .source_dir = "examples/resources", .install_dir = std.Build.InstallDir.bin, .install_subdir = "resources" });
     for (examples) |example| {
         const path = std.fs.path.join(b.allocator, &.{ "examples", example.path }) catch unreachable;
         var text: [64:0]u8 = undefined;
@@ -28,7 +27,10 @@ pub fn build(b: *std.Build) void {
         exe.linkLibC();
         exe.linkLibrary(raylib);
         exe.addModule("zray", zigrl);
+        b.installArtifact(exe);
+
         const run_example = b.addRunArtifact(exe);
+        run_example.step.dependOn(b.getInstallStep());
         const run_step = b.step(step_name, example.display_name);
         run_step.dependOn(&run_example.step);
     }
@@ -100,4 +102,5 @@ const examples = [_]Example{
     .{ .path = "input_mouse.zig", .display_name = "Core: Input Mouse" },
     .{ .path = "2d_camera.zig", .display_name = "Core: 2D Camera" },
     .{ .path = "2d_camera_platformer.zig", .display_name = "Core: 2D Camera Platformer" },
+    .{ .path = "logo_raylib.zig", .display_name = "Textures: Logo Raylib" },
 };
