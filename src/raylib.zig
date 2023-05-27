@@ -25,6 +25,10 @@ pub const getTime = core.getTime;
 
 pub const getRandomValue = core.getRandomValue;
 
+pub const isFileDropped = core.isFileDropped;
+pub const loadDroppedFiles = core.loadDroppedFiles;
+pub const unloadDroppedFiles = core.unloadDroppedFiles;
+
 pub const isKeyPressed = core.isKeyPressed;
 pub const isKeyDown = core.isKeyDown;
 

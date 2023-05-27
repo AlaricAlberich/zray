@@ -105,6 +105,7 @@ const examples = [_]Example{
     .{ .path = "input_mouse.zig", .display_name = "Core: Input Mouse" },
     .{ .path = "2d_camera.zig", .display_name = "Core: 2D Camera" },
     .{ .path = "2d_camera_platformer.zig", .display_name = "Core: 2D Camera Platformer" },
+    .{ .path = "drop_files.zig", .display_name = "Core: Drop Files" },
     .{ .path = "smooth_pixelperfect.zig", .display_name = "Core: Smooth Pixelperfect" },
     .{ .path = "logo_raylib.zig", .display_name = "Textures: Logo Raylib" },
     .{ .path = "npatch_drawing.zig", .display_name = "Textures: NPatch Drawing" },

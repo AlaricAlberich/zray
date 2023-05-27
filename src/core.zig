@@ -202,6 +202,11 @@ pub fn getRandomValue(min: i32, max: i32) i32 {
 //    void SetSaveFileTextCallback(SaveFileTextCallback callback); // Set custom file text data saver
 
 //    // Files management functions
+pub const FilePathList = struct {
+    capacity: u32,
+    count: u32,
+    paths: [*][*]u8,
+};
 //    unsigned char *LoadFileData(const char *fileName, unsigned int *bytesRead);       // Load file data as byte array (read)
 //    void UnloadFileData(unsigned char *data);                   // Unload file data allocated by LoadFileData()
 //    bool SaveFileData(const char *fileName, void *data, unsigned int bytesToWrite);   // Save data to file from byte array (write), returns true on success
@@ -225,9 +230,22 @@ pub fn getRandomValue(min: i32, max: i32) i32 {
 //    FilePathList LoadDirectoryFiles(const char *dirPath);       // Load directory filepaths
 //    FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool scanSubdirs); // Load directory filepaths with extension filtering and recursive directory scan
 //    void UnloadDirectoryFiles(FilePathList files);              // Unload filepaths
-//    bool IsFileDropped(void);                                   // Check if a file has been dropped into window
-//    FilePathList LoadDroppedFiles(void);                        // Load dropped filepaths
+/// Check if a file has been dropped into window
+pub fn isFileDropped() bool {
+    return c.IsFileDropped();
+}
+/// Load dropped filepaths
+pub fn loadDroppedFiles() FilePathList {
+    const c_files = c.LoadDroppedFiles();
+    const result: FilePathList = .{ .capacity = c_files.capacity, .count = c_files.count, .paths = @ptrCast([*][*]u8, c_files.paths) };
+    return result;
+}
 //    void UnloadDroppedFiles(FilePathList files);                // Unload dropped filepaths
+pub fn unloadDroppedFiles(files: FilePathList) void {
+    const c_ptr = @ptrCast([*c][*c]u8, files.paths);
+    const c_files = .{ .capacity = files.capacity, .count = files.count, .paths = c_ptr };
+    c.UnloadDroppedFiles(c_files);
+}
 //    long GetFileModTime(const char *fileName);                  // Get file modification time (last write time)
 
 //    // Compression/Encoding functionality
