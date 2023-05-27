@@ -105,11 +105,7 @@ pub const Texture = packed struct {
     /// Load texture from file into GPU memory (VRAM)
     /// Filepath is relative to the executable
     pub fn init(file_name: []const u8) !Self {
-        const std = @import("std");
-        var full_path: [std.fs.MAX_PATH_BYTES]u8 = undefined;
-        const dir = try std.fs.selfExeDirPath(&full_path);
-        _ = try std.fmt.bufPrintZ(full_path[dir.len..], "/{s}", .{file_name});
-        const c_file_name = @ptrCast([*c]const u8, &full_path);
+        const c_file_name = @ptrCast([*c]const u8, file_name);
         const c_texture = c.LoadTexture(c_file_name);
 
         if (c_texture.id == 0) {

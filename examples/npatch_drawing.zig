@@ -15,6 +15,7 @@
 //*
 //********************************************************************************************/
 
+const std = @import("std");
 const raylib = @import("zray");
 const NPatchLayout = raylib.NPatchLayout;
 const Color = raylib.Color;
@@ -32,7 +33,12 @@ pub fn main() !void {
     defer raylib.closeWindow(); // Close window and OpenGL context
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    const npatch_texture = try raylib.Texture2D.init("resources/ninepatch_button.png");
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const exe_dir = try std.fs.selfExeDirPathAlloc(allocator);
+    const path = try std.fs.path.join(allocator, &.{ exe_dir, "resources", "ninepatch_button.png" });
+    const npatch_texture = try raylib.Texture2D.init(path);
     defer npatch_texture.deinit();
 
     var mouse_position: raylib.Vector2 = undefined;

@@ -11,6 +11,7 @@
 //*
 //********************************************************************************************/
 
+const std = @import("std");
 const raylib = @import("zray");
 const Texture2D = raylib.Texture2D;
 
@@ -27,7 +28,12 @@ pub fn main() !void {
     defer raylib.closeWindow(); // Close window and OpenGL context
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    const texture = try Texture2D.init("resources/raylib_logo.png"); // Texture loading
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+    const dir = try std.fs.selfExeDirPathAlloc(arena.allocator());
+    const path = try std.fs.path.join(arena.allocator(), &.{ dir, "resources", "raylib_logo.png" });
+    std.log.info("{s}", .{path});
+    const texture = try Texture2D.init(path); // Texture loading
     defer texture.deinit();
     //---------------------------------------------------------------------------------------
 
