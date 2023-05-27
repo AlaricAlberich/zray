@@ -103,4 +103,5 @@ const examples = [_]Example{
     .{ .path = "2d_camera.zig", .display_name = "Core: 2D Camera" },
     .{ .path = "2d_camera_platformer.zig", .display_name = "Core: 2D Camera Platformer" },
     .{ .path = "logo_raylib.zig", .display_name = "Textures: Logo Raylib" },
+    .{ .path = "npatch_drawing.zig", .display_name = "Textures: NPatch Drawing" },
 };

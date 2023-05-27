@@ -3,6 +3,8 @@ const c = @cImport({
 });
 const main = @import("lib.zig");
 const Color = main.Color;
+const Rectangle = main.Rectangle;
+const Vector2 = main.Vector2;
 
 //    // Image loading functions
 //    // NOTE: These functions do not require GPU access
@@ -117,6 +119,16 @@ pub const Texture = packed struct {
         const c_texture = @bitCast(c.struct_Texture, self);
         c.DrawTexture(c_texture, x, y, c_color);
     }
+
+    //    void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
+    pub fn drawNPatch(self: Self, npatch_info: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+        const c_tint = @bitCast(c.struct_Color, tint);
+        const c_texture = @bitCast(c.struct_Texture, self);
+        const c_npatch_info = @bitCast(c.struct_NPatchInfo, npatch_info);
+        const c_dest = @bitCast(c.struct_Rectangle, dest);
+        const c_origin = @bitCast(c.struct_Vector2, origin);
+        c.DrawTextureNPatch(c_texture, c_npatch_info, c_dest, c_origin, rotation, c_tint);
+    }
 };
 //    Texture2D LoadTextureFromImage(Image image);                                                       // Load texture from image data
 //    TextureCubemap LoadTextureCubemap(Image image, int layout);                                        // Load cubemap from image, multiple image cubemap layouts supported
@@ -138,7 +150,6 @@ pub const Texture = packed struct {
 //    void DrawTextureEx(Texture2D texture, Vector2 position, float rotation, float scale, Color tint);  // Draw a Texture2D with extended parameters
 //    void DrawTextureRec(Texture2D texture, Rectangle source, Vector2 position, Color tint);            // Draw a part of a texture defined by a rectangle
 //    void DrawTexturePro(Texture2D texture, Rectangle source, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draw a part of a texture defined by a rectangle with 'pro' parameters
-//    void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
 //
 //    // Color/pixel related functions
 //    Color Fade(Color color, float alpha);                                 // Get color with alpha applied, alpha goes from 0.0f to 1.0f
@@ -199,4 +210,19 @@ pub const PixelFormat = enum(i32) {
     compressed_astc_4x4_rgba,
     /// 2 bpp
     compressed_astc_8x8_rgba,
+};
+
+pub const NPatchLayout = enum(i32) {
+    nine_patch,
+    three_patch_vertical,
+    three_patch_horizontal,
+};
+
+pub const NPatchInfo = packed struct {
+    source: Rectangle,
+    left: i32,
+    top: i32,
+    right: i32,
+    bottom: i32,
+    layout: NPatchLayout,
 };

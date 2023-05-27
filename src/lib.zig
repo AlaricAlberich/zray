@@ -30,6 +30,8 @@ pub const getMousePosition = core.getMousePosition;
 pub const getMouseWheelMove = core.getMouseWheelMove;
 
 const textures = @import("textures.zig");
+pub const NPatchLayout = textures.NPatchLayout;
+pub const PixelFormat = textures.PixelFormat;
 pub const Texture = textures.Texture;
 pub const Texture2D = Texture;
 
