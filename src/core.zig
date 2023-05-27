@@ -8,7 +8,7 @@ const Vector2 = main.Vector2;
 const Key = main.Key;
 const MouseButton = main.MouseButton;
 const RenderTexture2D = main.RenderTexture2D;
-// // Window-related functions
+// Window-related functions
 /// Initialize window and OpenGL context
 pub fn initWindow(screen_width: i32, screen_height: i32, title: []const u8) void {
     const t = @ptrCast([*c]const u8, title);
@@ -22,11 +22,26 @@ pub fn windowShouldClose() bool {
 pub fn closeWindow() void {
     c.CloseWindow();
 }
-//    bool IsWindowReady(void);                                   // Check if window has been initialized successfully
-//    bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
-//    bool IsWindowHidden(void);                                  // Check if window is currently hidden (only PLATFORM_DESKTOP)
-//    bool IsWindowMinimized(void);                               // Check if window is currently minimized (only PLATFORM_DESKTOP)
-//    bool IsWindowMaximized(void);                               // Check if window is currently maximized (only PLATFORM_DESKTOP)
+/// Check if window has been initialized successfully
+pub fn isWindowReady() bool {
+    return c.isWindowReady();
+}
+/// Check if window is currently fullscreen
+pub fn isWindowFullscreen() bool {
+    return c.isWindowFullscreen();
+}
+/// Check if window is currently hidden (only PLATFORM_DESKTOP)
+pub fn isWindowHidden() bool {
+    return c.isWindowHidden();
+}
+/// Check if window is currently minimized (only PLATFORM_DESKTOP)
+pub fn isWindowMinimized() bool {
+    return c.isWindowMinimized();
+}
+/// Check if window is currently maximized (only PLATFORM_DESKTOP)
+pub fn isWindowMaximized() bool {
+    return c.isWindowMaximized();
+}
 //    bool IsWindowFocused(void);                                 // Check if window is currently focused (only PLATFORM_DESKTOP)
 //    bool IsWindowResized(void);                                 // Check if window has been resized last frame
 //    bool IsWindowState(unsigned int flag);                      // Check if one specific window flag is enabled

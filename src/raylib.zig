@@ -6,6 +6,11 @@ const core = @import("core.zig");
 pub const initWindow = core.initWindow;
 pub const windowShouldClose = core.windowShouldClose;
 pub const closeWindow = core.closeWindow;
+pub const isWindowReady = core.isWindowReady;
+pub const isWindowFullscreen = core.isWindowFullscreen;
+pub const isWindowHidden = core.isWindowHidden;
+pub const isWindowMinimized = core.isWindowMinimized;
+pub const isWindowMaximized = core.isWindowMaximized;
 pub const getScreenWidth = core.getScreenWidth;
 
 pub const clearBackground = core.clearBackground;
