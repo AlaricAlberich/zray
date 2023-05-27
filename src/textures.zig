@@ -1,7 +1,7 @@
 const c = @cImport({
     @cInclude("raylib.h");
 });
-const main = @import("lib.zig");
+const main = @import("raylib.zig");
 const Color = main.Color;
 const Rectangle = main.Rectangle;
 const Vector2 = main.Vector2;

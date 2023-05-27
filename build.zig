@@ -7,9 +7,9 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const raylib = buildRaylib(b, target, optimize);
-    const zigrl = b.createModule(.{ .source_file = .{ .path = "src/lib.zig" } });
+    const zigrl = b.createModule(.{ .source_file = .{ .path = "src/raylib.zig" } });
 
-    const tests = b.addTest(.{ .root_source_file = .{ .path = "src/lib.zig" } });
+    const tests = b.addTest(.{ .root_source_file = .{ .path = "src/raylib.zig" } });
     tests.linkLibC();
     tests.linkLibrary(raylib);
 
