@@ -190,8 +190,8 @@ fn updateCameraCenterInsideMap(camera: *Camera2D, player: *Player, env_items: []
 
     for (env_items) |ei| {
         min_x = std.math.min(ei.rect.x, min_x);
-        min_y = std.math.max(ei.rect.x + ei.rect.width, max_x);
-        max_x = std.math.min(ei.rect.y, min_y);
+        max_x = std.math.max(ei.rect.x + ei.rect.width, max_x);
+        min_y = std.math.min(ei.rect.y, min_y);
         max_y = std.math.max(ei.rect.y + ei.rect.height, max_y);
     }
 
