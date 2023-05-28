@@ -127,6 +127,15 @@ pub const Texture = packed struct {
         c.DrawTexture(c_texture, x, y, c_color);
     }
 
+    pub fn drawRec(self: Self, source: Rectangle, position: Vector2, tint: Color) void {
+        const c_tex = self.cCast();
+        const c_source = source.cCast();
+        const c_position = position.cCast();
+        const c_tint = tint.cCast();
+
+        c.DrawTextureRec(c_tex, c_source, c_position, c_tint);
+    }
+
     pub fn drawPro(self: Self, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
         const c_tex = self.cCast();
         const c_src = source.cCast();
@@ -137,7 +146,7 @@ pub const Texture = packed struct {
         c.DrawTexturePro(c_tex, c_src, c_dest, c_origin, rotation, c_tint);
     }
 
-    //    void DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint); // Draws a texture (or part of it) that stretches or shrinks nicely
+    /// Draws a texture (or part of it) that stretches or shrinks nicely
     pub fn drawNPatch(self: Self, npatch_info: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
         const c_tint = @bitCast(c.struct_Color, tint);
         const c_texture = @bitCast(c.struct_Texture, self);
