@@ -49,6 +49,20 @@ pub const Texture = textures.Texture;
 pub const Texture2D = Texture;
 pub const RenderTexture = textures.RenderTexture;
 pub const RenderTexture2D = RenderTexture;
+pub const Image = textures.Image;
+
+const rtext = @import("text.zig");
+pub const GlyphInfo = rtext.GlyphInfo;
+pub const Font = rtext.Font;
+
+pub const getFontDefault = rtext.getFontDefault;
+
+pub const drawFPS = rtext.drawFPS;
+pub const drawText = rtext.drawText;
+pub const drawTextEx = rtext.drawTextEx;
+
+pub const measureText = rtext.measureText;
+pub const measureTextEx = rtext.measureTextEx;
 
 //-----------------
 // Structs
@@ -150,14 +164,6 @@ pub const Vector2 = packed struct {
         return @bitCast(c.struct_Vector2, self);
     }
 };
-
-pub fn drawText(text: []const u8, x: i32, y: i32, font_size: i32, color: Color) void {
-    c.DrawText(@ptrCast([*c]const u8, text), x, y, font_size, @bitCast(c.struct_Color, color));
-}
-
-pub fn drawFPS(pos_x: i32, pos_y: i32) void {
-    c.DrawFPS(pos_x, pos_y);
-}
 
 pub fn drawCircleV(position: Vector2, radius: f32, color: Color) void {
     c.DrawCircleV(@bitCast(c.struct_Vector2, position), radius, @bitCast(c.struct_Color, color));

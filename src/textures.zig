@@ -6,6 +6,19 @@ const Color = main.Color;
 const Rectangle = main.Rectangle;
 const Vector2 = main.Vector2;
 
+pub const Image = packed struct {
+    data: *anyopaque,
+    width: i32,
+    height: i32,
+    mipmaps: i32,
+    format: PixelFormat,
+
+    const Self = @This();
+    pub inline fn cCast(self: Self) c.struct_Image {
+        return @bitCast(c.struct_Image, self);
+    }
+};
+
 //    // Image loading functions
 //    // NOTE: These functions do not require GPU access
 //    Image LoadImage(const char *fileName);                                                             // Load image from file into CPU memory (RAM)
@@ -76,8 +89,7 @@ const Vector2 = main.Vector2;
 //    void ImageDrawCircle(Image *dst, int centerX, int centerY, int radius, Color color);               // Draw a filled circle within an image
 //    void ImageDrawCircleV(Image *dst, Vector2 center, int radius, Color color);                        // Draw a filled circle within an image (Vector version)
 //    void ImageDrawCircleLines(Image *dst, int centerX, int centerY, int radius, Color color);          // Draw circle outline within an image
-//    void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version)
-//    void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
+//    void ImageDrawCircleLinesV(Image *dst, Vector2 center, int radius, Color color);                   // Draw circle outline within an image (Vector version) void ImageDrawRectangle(Image *dst, int posX, int posY, int width, int height, Color color);       // Draw rectangle within an image
 //    void ImageDrawRectangleV(Image *dst, Vector2 position, Vector2 size, Color color);                 // Draw rectangle within an image (Vector version)
 //    void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);                                // Draw rectangle within an image
 //    void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);                   // Draw rectangle lines within an image
