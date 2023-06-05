@@ -10,6 +10,10 @@ const Texture2D = main.Texture2D;
 const Image = main.Image;
 const Color = main.Color;
 
+const FontError = error{
+    FontLoadError,
+};
+
 pub const GlyphInfo = packed struct {
     value: i32,
     offset_x: i32,
@@ -30,13 +34,23 @@ pub const Font = packed struct {
     pub inline fn cCast(self: Self) c.struct_Font {
         return @bitCast(c.struct_Font, self);
     }
+
+    pub fn init(file_name: []const u8) !Self {
+        const c_file_name = @ptrCast([*c]const u8, file_name);
+        const c_font = c.LoadFont(c_file_name);
+
+        if (c_font.glyph_count == 0) {
+            return FontError.FontLoadError;
+        }
+
+        return @bitCast(Self, c_font);
+    }
+
+    pub fn default() Self {
+        const c_font = c.GetFontDefault();
+        return @bitCast(Self, c_font);
+    }
 };
-// Font GetFontDefault(void);                                                            // Get the default Font
-pub fn getFontDefault() Font {
-    const c_font = c.GetFontDefault();
-    return @bitCast(Font, c_font);
-}
-// Font LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
 // Font LoadFontEx(const char *fileName, int fontSize, int *fontChars, int glyphCount);  // Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
 // Font LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from Image (XNA style)
 // Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize, int *fontChars, int glyphCount); // Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
