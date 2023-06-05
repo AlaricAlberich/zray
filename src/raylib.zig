@@ -55,8 +55,6 @@ const rtext = @import("text.zig");
 pub const GlyphInfo = rtext.GlyphInfo;
 pub const Font = rtext.Font;
 
-pub const getFontDefault = rtext.getFontDefault;
-
 pub const drawFPS = rtext.drawFPS;
 pub const drawText = rtext.drawText;
 pub const drawTextEx = rtext.drawTextEx;
