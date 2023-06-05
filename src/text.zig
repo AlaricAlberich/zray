@@ -46,6 +46,11 @@ pub const Font = packed struct {
         return @bitCast(Self, c_font);
     }
 
+    pub fn deinit(self: Self) void {
+        const c_font = self.cCast();
+        c.UnloadFont(c_font);
+    }
+
     pub fn default() Self {
         const c_font = c.GetFontDefault();
         return @bitCast(Self, c_font);
