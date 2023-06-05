@@ -39,7 +39,7 @@ pub const Font = packed struct {
         const c_file_name = @ptrCast([*c]const u8, file_name);
         const c_font = c.LoadFont(c_file_name);
 
-        if (c_font.glyph_count == 0) {
+        if (c_font.glyphCount == 0) {
             return FontError.FontLoadError;
         }
 
