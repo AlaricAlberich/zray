@@ -137,16 +137,20 @@ pub const Vector2 = packed struct {
     x: f32,
     y: f32,
 
+    pub const zero: Self = .{ .x = 0, .y = 0 };
+    pub const one: Self = .{ .x = 1, .y = 1 };
+    pub const right: Self = .{ .x = 1, .y = 0 };
+
     const Self = @This();
-    pub fn add(self: Self, other: Self) Self {
+    pub inline fn add(self: Self, other: Self) Self {
         return .{ .x = self.x + other.x, .y = self.y + other.y };
     }
 
-    pub fn subtract(self: Self, other: Self) Self {
+    pub inline fn subtract(self: Self, other: Self) Self {
         return .{ .x = self.x - other.x, .y = self.y - other.y };
     }
 
-    pub fn scale(self: Self, scalar: f32) Self {
+    pub inline fn scale(self: Self, scalar: f32) Self {
         return .{ .x = self.x * scalar, .y = self.y * scalar };
     }
 
@@ -154,12 +158,21 @@ pub const Vector2 = packed struct {
         return std.math.sqrt(self.lengthSqr());
     }
 
-    pub fn lengthSqr(self: Self) f32 {
+    pub inline fn lengthSqr(self: Self) f32 {
         return self.x * self.x + self.y * self.y;
     }
 
     pub inline fn cCast(self: Self) c.struct_Vector2 {
         return @bitCast(c.struct_Vector2, self);
+    }
+
+    // Rotate clockwise by the given radians
+    pub fn rotated(self: Self, angle: f32) Self {
+        const i_hat: Vector2 = .{ .x = std.math.cos(-angle), .y = -std.math.sin(-angle) };
+        const scaled_i = i_hat.scale(self.x);
+        const j_hat: Vector2 = .{ .x = std.math.sin(-angle), .y = std.math.cos(-angle) };
+        const scaled_j = j_hat.scale(self.y);
+        return scaled_i.add(scaled_j);
     }
 };
 
